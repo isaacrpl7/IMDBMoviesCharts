@@ -12,14 +12,33 @@ let imdb_data_grosspercent = imdb_data.map((movie) => {
     return {...movie, gross: gross_percent}
 })
 
+
 imdb_data_grosspercent = imdb_data_grosspercent.map((movie) => {
-    let runtime_percent = (movie.runtime * (7/3110)) + (274/1555)
-    runtime_percent = Math.round((runtime_percent + Number.EPSILON) * 100) / 100
+    //let runtime_percent = (movie.runtime * (7/3110)) + (274/1555)
+    // runtime_percent = Math.round((runtime_percent + Number.EPSILON) * 100) / 100
+    // [55, 132.75]
+    // [132.75, 210.5]
+    // [210.5, 288.25]
+    // [288.25, 366]
+    let runtime_percent = 0;
+    if (movie.runtime >= 55 && movie.runtime < 123.75) {
+        runtime_percent = 0;
+    } else if(movie.runtime >= 123.75 && movie.runtime < 210.5) {
+        runtime_percent = 1;
+    } else if(movie.runtime >= 210.5 && movie.runtime < 288.25){
+        runtime_percent = 2;
+    } else if(movie.runtime >= 288.25 && movie.runtime <= 366){
+        runtime_percent = 3;
+    }       
+
     return {...movie, runtime: runtime_percent}
 })
 
 imdb_data_grosspercent = imdb_data_grosspercent.sort((a, b) => a.year - b.year)
-const colors = ["#482121", "#47A992"]
+const colors = [
+    ["#e38d8d", "#b06666", "#875151", "#633c3c"], 
+    ["#90f0d9", "#5ab09c", "#29856f", "#0e5c49"]
+]
 
 if (chart.getContext) {
     const ctx = chart.getContext("2d");
@@ -37,7 +56,7 @@ if (chart.getContext) {
     });
 
     let color = 0
-    ctx.fillStyle = colors[color]
+    ctx.fillStyle = colors[color][0]
     imdb_data_grosspercent.forEach((movie) => {
         
         if(movie.gross !== null && movie.gross > 0 && movie.country !== null) {
@@ -48,8 +67,7 @@ if (chart.getContext) {
                 color = color?0:1
                 ano_atual = movie.year;
             }
-            ctx.fillStyle = colors[color]
-            ctx.globalAlpha = movie.runtime;
+            ctx.fillStyle = colors[color][movie.runtime]
             ctx.fillRect(x++, y, 1, height);
 
             // Desenhar ponto indicando nacionalidade
