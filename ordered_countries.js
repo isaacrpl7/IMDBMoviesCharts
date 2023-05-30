@@ -72,12 +72,12 @@ export const ordered_countries = [
 ]
 
 export const region_colors = [
-    "#272932",
-    "#4D7EA8",
-    "#828489",
-    "#9E90A2",
-    "#B6C2D9",
-    "#ae69d6"
+    "#ededed",
+    "#ffffff",
+    "#ededed",
+    "#ffffff",
+    "#ededed",
+    "#ffffff"
 ]
 
 export const getIndex = (country) => {
